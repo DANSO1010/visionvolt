@@ -8,7 +8,7 @@ import sitemap from '@astrojs/sitemap';
 // https://astro.build/config
 export default defineConfig({
   // TODO: replace with the real production domain once the client shares it.
-  site: 'https://www.visionvolt.com',
+  site: 'https://www.vision-volt.com',
 
   vite: {
     plugins: [tailwindcss()]
