@@ -99,7 +99,7 @@ export const siteContent = {
   company: {
     name: "VisionVolt",
     tagline: "Advance security and electrical solution",
-    emails: ["visionvolt3@gmail.com"],
+    emails: ["sales@vision-volt.com"],
     phones: [
       { name: "Sergio Galindo", number: "(224) 410-8315" },
       { name: "Nicolás Botero", number: "(773) 398-0085" },
