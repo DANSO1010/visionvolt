@@ -1,0 +1,53 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { siteContent } from "../../data/siteContent";
+import { getIcon } from "../../utils/icons";
+
+export function getStaticPaths() {
+  return siteContent.detailedServices.map((service) => ({
+    params: { slug: service.slug },
+    props: { service },
+  }));
+}
+
+const { service } = Astro.props;
+const Icon = getIcon(service.icon);
+---
+
+<Layout title={`${service.title} | ${siteContent.company.name}`} description={service.shortDesc}>
+  <main class="pt-28 sm:pt-36">
+    <section class="px-4 py-24 sm:px-margin-desktop">
+      <a href="/#services" class="mb-8 inline-block font-mono text-[11px] text-text-secondary hover:text-primary-container">
+        ← ALL SERVICES
+      </a>
+
+      <div class="max-w-3xl">
+        <Icon size={40} strokeWidth={1.5} className="mb-6 text-hud-blue-light" />
+        <h1 class="mb-6 text-[40px] font-bold leading-tight text-white">{service.title}</h1>
+        <p class="mb-8 text-lg leading-relaxed text-text-secondary">{service.longDescription}</p>
+
+        <div class="mb-10 border border-border-technical bg-surface-slate/20 p-6">
+          <span class="mb-4 block font-mono text-[11px] uppercase text-hud-blue-light">What's Included</span>
+          <ul class="space-y-3">
+            {
+              service.features.map((feature: string) => (
+                <li class="flex items-start gap-3 text-text-secondary">
+                  <span class="mt-1 h-1.5 w-1.5 shrink-0 bg-primary-container" />
+                  {feature}
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+
+        <button
+          type="button"
+          data-open-quote-modal
+          class="bg-primary-container px-10 py-4 font-mono text-sm font-bold text-background transition-all hover:scale-105"
+        >
+          {siteContent.company.ctaText}
+        </button>
+      </div>
+    </section>
+  </main>
+</Layout>

@@ -1,0 +1,58 @@
+---
+import BrandLogo from "./BrandLogo.astro";
+import FooterMap from "./FooterMap.astro";
+import { siteContent } from "../../data/siteContent";
+
+const year = new Date().getFullYear();
+---
+
+<footer class="w-full border-t border-border-technical bg-surface-container-lowest px-4 py-12 sm:px-margin-desktop">
+  <div class="flex flex-col gap-10 md:flex-row md:justify-between">
+    <div>
+      <BrandLogo iconClass="h-10 w-10" textClass="text-xl" />
+      <div class="mt-4 flex flex-col gap-2 text-[11px] text-text-secondary">
+        {
+          siteContent.company.phones.map((phone) => (
+            <a href={`tel:${phone.number.replace(/[^\d+]/g, "")}`} class="hover:text-primary-container">
+              {phone.name}: {phone.number}
+            </a>
+          ))
+        }
+        {
+          siteContent.company.emails.map((email) => (
+            <a href={`mailto:${email}`} class="hover:text-primary-container">
+              {email}
+            </a>
+          ))
+        }
+      </div>
+      <div class="mt-4 flex gap-4 text-[11px] text-text-secondary">
+        <a href={siteContent.company.socials.tiktok.url} target="_blank" rel="noopener noreferrer" class="hover:text-primary-container">
+          TikTok: {siteContent.company.socials.tiktok.handle}
+        </a>
+        <a href={siteContent.company.socials.instagram.url} target="_blank" rel="noopener noreferrer" class="hover:text-primary-container">
+          Instagram: {siteContent.company.socials.instagram.handle}
+        </a>
+      </div>
+    </div>
+
+    <FooterMap />
+
+    <div class="flex flex-wrap gap-8 md:justify-end">
+      {
+        siteContent.footerLinks.map((link) => (
+          <a
+            href={link.href}
+            class="text-[11px] text-text-secondary transition-colors hover:text-primary-container"
+          >
+            {link.label}
+          </a>
+        ))
+      }
+    </div>
+  </div>
+
+  <div class="mt-10 border-t border-border-technical pt-6 text-center text-[11px] text-text-secondary md:text-right">
+    &copy; {year} VISIONVOLT INTEGRATIONS. ALL RIGHTS RESERVED. [VVOLT-INSTALL-{String(year).slice(-2)}]
+  </div>
+</footer>

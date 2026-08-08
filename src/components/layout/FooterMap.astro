@@ -1,0 +1,63 @@
+---
+import { MapPin } from "lucide-react";
+import { siteContent } from "../../data/siteContent";
+
+const { lat, lng } = siteContent.company.location;
+const coords = `${lat},${lng}`;
+// No-API-key Google Maps embed — swap the query for the real coordinates once available.
+const embedSrc = `https://maps.google.com/maps?q=${encodeURIComponent(coords)}&z=14&output=embed`;
+// Universal Google Maps link: opens the native app on mobile if installed, otherwise the mobile/desktop web map.
+const mapsUrl = `https://www.google.com/maps?q=${encodeURIComponent(coords)}`;
+---
+
+<div
+  class="footer-map relative h-36 w-full max-w-xs overflow-hidden border border-border-technical md:h-48 md:max-w-2xl"
+  data-embed-src={embedSrc}
+  data-maps-url={mapsUrl}
+>
+  <button
+    type="button"
+    class="footer-map-facade group relative flex h-full w-full flex-col items-center justify-center gap-2 overflow-hidden bg-surface-slate transition-colors hover:border-primary-container"
+    aria-label="Load interactive Google Maps for VisionVolt's location"
+  >
+    <div class="technical-grid absolute inset-0 opacity-40"></div>
+    <MapPin aria-hidden="true" size={28} strokeWidth={1.5} className="relative z-10 text-hud-blue-light" />
+    <span class="relative z-10 font-mono text-[10px] text-hud-blue-light">[COMPANY_LOCATION]</span>
+    <span
+      class="relative z-10 font-mono text-[10px] font-bold text-white transition-colors group-hover:text-primary-container"
+    >
+      CLICK TO LOAD MAP
+    </span>
+  </button>
+</div>
+
+<script>
+  function loadMap(container: HTMLElement) {
+    const embedSrc = container.dataset.embedSrc;
+    const mapsUrl = container.dataset.mapsUrl;
+    if (!embedSrc || !mapsUrl) return;
+
+    container.innerHTML = "";
+
+    const iframe = document.createElement("iframe");
+    iframe.src = embedSrc;
+    iframe.title = "VisionVolt location map";
+    iframe.loading = "lazy";
+    iframe.className = "h-full w-full";
+    container.appendChild(iframe);
+
+    const link = document.createElement("a");
+    link.href = mapsUrl;
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
+    link.className =
+      "absolute bottom-2 right-2 z-10 flex items-center gap-1 border border-border-technical bg-surface-container-lowest/90 px-2 py-1 font-mono text-[9px] font-bold text-white transition-colors hover:border-primary-container hover:text-primary-container";
+    link.textContent = "OPEN IN GOOGLE MAPS";
+    container.appendChild(link);
+  }
+
+  document.querySelectorAll<HTMLElement>(".footer-map").forEach((container) => {
+    const facade = container.querySelector<HTMLButtonElement>(".footer-map-facade");
+    facade?.addEventListener("click", () => loadMap(container), { once: true });
+  });
+</script>

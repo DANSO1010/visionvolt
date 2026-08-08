@@ -1,0 +1,75 @@
+---
+import { siteContent } from "../../data/siteContent";
+---
+
+<section class="border-y border-border-technical bg-surface-slate py-4">
+  <h2 class="sr-only">Core Capabilities</h2>
+  <div class="ticker-wrap">
+    <div class="ticker flex items-center gap-12 text-sm text-primary" data-ticker-track>
+      <span class="contents" data-ticker-set>
+        {
+          siteContent.valueTicker.map((item) => (
+            <>
+              <span>{item}</span>
+              <span class="text-hud-blue-light">/</span>
+            </>
+          ))
+        }
+      </span>
+    </div>
+  </div>
+</section>
+
+<script>
+  // A pure "duplicate it twice" marquee only stays seamless if one copy is
+  // already wider than the viewport — otherwise the loop runs out of
+  // rendered content before it reaches the reset point, showing blank space.
+  // So instead: measure the real width of one set, then repeat it as many
+  // times as needed (per half) to guarantee coverage on any screen size, and
+  // scale the animation duration to keep the scroll speed constant.
+  const PIXELS_PER_SECOND = 38;
+
+  function setupTicker(track: HTMLElement) {
+    const wrap = track.parentElement;
+    const baseSet = track.querySelector<HTMLElement>("[data-ticker-set]");
+    if (!wrap || !baseSet) return;
+
+    const children = Array.from(baseSet.children) as HTMLElement[];
+    if (children.length === 0) return;
+
+    const firstRect = children[0].getBoundingClientRect();
+    const lastRect = children[children.length - 1].getBoundingClientRect();
+    const setContentWidth = lastRect.right - firstRect.left;
+    if (setContentWidth <= 0) return;
+
+    const gap = parseFloat(getComputedStyle(track).columnGap || getComputedStyle(track).gap) || 0;
+    const tileWidth = setContentWidth + gap;
+
+    const viewportWidth = wrap.getBoundingClientRect().width;
+    const repeatsPerHalf = Math.max(1, Math.ceil(viewportWidth / tileWidth));
+
+    const template = baseSet.cloneNode(true) as HTMLElement;
+    track.innerHTML = "";
+    for (let half = 0; half < 2; half++) {
+      for (let i = 0; i < repeatsPerHalf; i++) {
+        track.appendChild(template.cloneNode(true));
+      }
+    }
+
+    const halfWidth = track.scrollWidth / 2;
+    const duration = halfWidth / PIXELS_PER_SECOND;
+    track.style.setProperty("--ticker-duration", `${duration}s`);
+  }
+
+  function setupAll() {
+    document.querySelectorAll<HTMLElement>("[data-ticker-track]").forEach(setupTicker);
+  }
+
+  setupAll();
+
+  let resizeTimer: ReturnType<typeof setTimeout>;
+  window.addEventListener("resize", () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(setupAll, 200);
+  });
+</script>

@@ -1,0 +1,27 @@
+---
+import { siteContent } from "../../data/siteContent";
+---
+
+<section
+  class="relative flex flex-col items-center overflow-hidden bg-surface-container-low px-4 py-32 text-center sm:px-margin-desktop"
+>
+  <div class="relative z-10">
+    <span class="mb-4 block font-mono text-sm tracking-[0.3em] text-primary-container">
+      SECURE YOUR ASSETS NOW
+    </span>
+    <h2 class="mb-6 max-w-4xl text-4xl font-extrabold leading-tight text-white sm:text-5xl lg:text-[64px]">
+      {siteContent.company.tagline}
+    </h2>
+    <p class="mx-auto mb-10 max-w-3xl text-lg text-text-secondary">
+      Whether your project is residential, commercial or industrial, our team will design, install and configure
+      a solution tailored to your needs.
+    </p>
+    <button
+      type="button"
+      data-open-quote-modal
+      class="bg-primary-container px-16 py-8 font-mono text-2xl font-bold text-background shadow-[0_0_30px_rgba(255,215,0,0.4)] transition-all hover:scale-105"
+    >
+      {siteContent.company.ctaText}
+    </button>
+  </div>
+</section>

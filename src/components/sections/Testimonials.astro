@@ -1,0 +1,29 @@
+---
+import { Star } from "lucide-react";
+import { siteContent } from "../../data/siteContent";
+---
+
+<section class="px-4 py-24 sm:px-margin-desktop">
+  <div class="mb-12 flex flex-col">
+    <span class="mb-2 font-mono text-sm text-hud-blue-light">[CLIENT_FEEDBACK]</span>
+    <h2 class="text-[40px] font-bold leading-tight text-white">What Our Clients Say</h2>
+  </div>
+
+  <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+    {
+      siteContent.testimonials.map((testimonial) => (
+        <div class="border border-border-technical bg-surface-slate p-8">
+          <div class="mb-4 flex gap-1" role="img" aria-label={`${testimonial.stars} out of 5 stars`}>
+            {Array.from({ length: testimonial.stars }).map(() => (
+              <Star aria-hidden="true" size={16} className="fill-primary-container text-primary-container" />
+            ))}
+          </div>
+          <p class="text-lg italic leading-relaxed text-text-secondary">"{testimonial.quote}"</p>
+          <p class="mt-6 font-mono text-sm text-white">
+            {testimonial.author} <span class="text-text-secondary">— {testimonial.role}</span>
+          </p>
+        </div>
+      ))
+    }
+  </div>
+</section>

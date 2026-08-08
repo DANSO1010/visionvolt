@@ -1,0 +1,58 @@
+---
+import { Image } from "astro:assets";
+import { LogoLightning } from "../ui/LogoLightning";
+import { siteContent } from "../../data/siteContent";
+import logoImage from "../../assets/logos/visionvolt-logo-bkg.png";
+
+interface Props {
+  iconClass?: string;
+  textClass?: string;
+  loading?: "eager" | "lazy";
+}
+
+const {
+  iconClass = "h-12 w-12 sm:h-16 sm:w-16",
+  textClass = "text-lg sm:text-2xl",
+  loading = "lazy",
+} = Astro.props;
+---
+
+<a href="/" class="brand-logo group relative flex shrink-0 items-center gap-2">
+  <LogoLightning client:idle glowColor="#38bdf8" color="#ffffff" />
+  <span class="relative z-10 flex items-center gap-2">
+    <Image
+      src={logoImage}
+      alt=""
+      loading={loading}
+      decoding="async"
+      class={`object-contain ${iconClass}`}
+    />
+    <span class={`brand-wordmark font-heading font-bold tracking-tighter ${textClass}`}>
+      {siteContent.company.name}
+    </span>
+  </span>
+</a>
+
+<style>
+  .brand-wordmark {
+    background-image: linear-gradient(90deg, #205f7d 0%, #205f7d 58%, #cfa74f 58%, #cfa74f 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+  }
+
+  .brand-logo:hover .brand-wordmark {
+    background-image: linear-gradient(90deg, #205f7d, #38bdf8, #cfa74f, #0056a0, #205f7d);
+    background-size: 300% 100%;
+    animation: brand-shimmer 2.5s linear infinite;
+  }
+
+  @keyframes brand-shimmer {
+    from {
+      background-position: 0% 0%;
+    }
+    to {
+      background-position: -300% 0%;
+    }
+  }
+</style>

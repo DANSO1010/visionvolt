@@ -1,0 +1,81 @@
+---
+import { Mail, Phone, AtSign, Music2 } from "lucide-react";
+import { siteContent } from "../../data/siteContent";
+import EstimateForm from "../ui/EstimateForm.jsx";
+---
+
+<section class="border-t border-border-technical bg-surface-container-lowest px-4 py-24 sm:px-margin-desktop">
+  <div class="mb-12">
+    <span class="mb-2 block font-mono text-sm text-hud-blue-light">[CONTACT_US]</span>
+    <h2 class="text-[40px] font-bold leading-tight text-white">Get In Touch</h2>
+  </div>
+
+  <div class="grid grid-cols-1 gap-8 lg:grid-cols-5">
+    <div class="flex flex-col gap-4 lg:col-span-2">
+      {
+        siteContent.company.phones.map((phone) => (
+          <a
+            href={`tel:${phone.number.replace(/[^\d+]/g, "")}`}
+            class="flex items-start gap-4 border border-border-technical bg-surface-slate p-6 transition-colors hover:border-primary-container"
+          >
+            <Phone size={22} strokeWidth={1.5} className="text-hud-blue-light" />
+            <div>
+              <p class="font-heading text-sm font-bold text-white">{phone.name}</p>
+              <p class="mt-1 text-text-secondary">{phone.number}</p>
+            </div>
+          </a>
+        ))
+      }
+
+      {
+        siteContent.company.emails.map((email) => (
+          <a
+            href={`mailto:${email}`}
+            class="flex items-start gap-4 border border-border-technical bg-surface-slate p-6 transition-colors hover:border-primary-container"
+          >
+            <Mail size={22} strokeWidth={1.5} className="text-hud-blue-light" />
+            <div>
+              <p class="font-heading text-sm font-bold text-white">Email</p>
+              <p class="mt-1 text-text-secondary">{email}</p>
+            </div>
+          </a>
+        ))
+      }
+
+      <a
+        href={siteContent.company.socials.instagram.url}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="flex items-start gap-4 border border-border-technical bg-surface-slate p-6 transition-colors hover:border-primary-container"
+      >
+        <AtSign size={22} strokeWidth={1.5} className="text-hud-blue-light" />
+        <div>
+          <p class="font-heading text-sm font-bold text-white">Instagram</p>
+          <p class="mt-1 text-text-secondary">{siteContent.company.socials.instagram.handle}</p>
+        </div>
+      </a>
+
+      <a
+        href={siteContent.company.socials.tiktok.url}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="flex items-start gap-4 border border-border-technical bg-surface-slate p-6 transition-colors hover:border-primary-container"
+      >
+        <Music2 size={22} strokeWidth={1.5} className="text-hud-blue-light" />
+        <div>
+          <p class="font-heading text-sm font-bold text-white">TikTok</p>
+          <p class="mt-1 text-text-secondary">{siteContent.company.socials.tiktok.handle}</p>
+        </div>
+      </a>
+    </div>
+
+    <div class="border border-border-technical bg-surface-slate p-6 sm:p-8 lg:col-span-3">
+      <EstimateForm
+        client:visible
+        idPrefix="contact"
+        heading="Request a Free Estimate"
+        description="Fill out the form and our team will follow up with a customized proposal."
+      />
+    </div>
+  </div>
+</section>

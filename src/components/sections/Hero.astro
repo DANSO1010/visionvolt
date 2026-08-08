@@ -1,0 +1,79 @@
+---
+import { getImage } from "astro:assets";
+import { siteContent } from "../../data/siteContent";
+
+const heroPoster = await getImage({ src: siteContent.hero.backgroundImage, width: 1280, format: "webp" });
+---
+
+<section
+  id="top"
+  class="flex min-h-[80vh] flex-col items-center gap-12 px-4 py-24 pt-28 sm:px-margin-desktop sm:pt-36 md:flex-row"
+>
+  <div class="z-10 w-full md:w-5/12">
+    <div class="mb-4 flex items-center gap-2">
+      <span class="bg-hud-blue px-2 py-0.5 font-mono text-[11px] text-white">
+        {siteContent.hero.badge}
+      </span>
+      <span class="font-mono text-[11px] uppercase tracking-widest text-text-secondary">
+        {siteContent.hero.eyebrow}
+      </span>
+    </div>
+
+    <h1 class="mb-6 text-4xl font-extrabold leading-[1.1] tracking-tight text-white sm:text-5xl lg:text-[64px]">
+      {siteContent.company.tagline}
+    </h1>
+
+    <p class="mb-10 max-w-lg text-lg leading-relaxed text-text-secondary">
+      {siteContent.company.valueProposition}
+    </p>
+
+    <div class="flex flex-col gap-4">
+      <button
+        type="button"
+        data-open-quote-modal
+        class="w-fit bg-primary-container px-10 py-5 font-mono text-lg font-bold text-background shadow-[0_0_15px_rgba(255,215,0,0.3)] transition-all hover:scale-105"
+      >
+        {siteContent.company.ctaText}
+      </button>
+      <p class="text-[11px] text-text-secondary">
+        {siteContent.company.ctaSubtext}
+      </p>
+    </div>
+  </div>
+
+  <div
+    class="relative aspect-video w-full overflow-hidden border border-border-technical bg-surface-container-lowest md:w-7/12"
+  >
+    <video
+      class="h-full w-full object-cover opacity-60"
+      autoplay
+      muted
+      loop
+      playsinline
+      poster={heroPoster.src}
+    >
+      <source src={siteContent.hero.videoSrc} type="video/mp4" />
+    </video>
+    <div class="pointer-events-none absolute inset-0 p-6">
+      <div class="hud-bracket hud-bracket-tl hud-bracket-tr absolute left-6 top-6 h-32 w-32 opacity-50"></div>
+      <div class="hud-bracket hud-bracket-bl hud-bracket-br absolute bottom-6 right-6 h-32 w-32 opacity-50"></div>
+      <div class="absolute left-1/3 top-1/4 h-64 w-40 border-2 border-hud-blue">
+        <div class="absolute -top-6 left-0 bg-hud-blue px-1 font-mono text-[10px] text-white">
+          INSTALLATION_SITE: ACTIVE
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  document.addEventListener("mousemove", (e) => {
+    const boxes = document.querySelectorAll<HTMLElement>(".hud-bracket");
+    boxes.forEach((box) => {
+      const rect = box.getBoundingClientRect();
+      const x = e.clientX - rect.left - rect.width / 2;
+      const y = e.clientY - rect.top - rect.height / 2;
+      box.style.transform = `translate(${x * 0.05}px, ${y * 0.05}px)`;
+    });
+  });
+</script>

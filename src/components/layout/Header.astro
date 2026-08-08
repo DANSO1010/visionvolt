@@ -1,0 +1,118 @@
+---
+import { Phone, Mail } from "lucide-react";
+import BrandLogo from "./BrandLogo.astro";
+import { siteContent } from "../../data/siteContent";
+
+const currentPath = Astro.url.pathname;
+
+function targetId(href: string) {
+  if (href === "/") return "top";
+  const hashIndex = href.indexOf("#");
+  return hashIndex === -1 ? "" : href.slice(hashIndex + 1);
+}
+---
+
+<div id="site-header" class="fixed top-0 z-50 w-full">
+  <div
+    class="hidden items-center justify-end gap-6 border-b border-border-technical bg-surface-container-lowest px-4 py-1.5 font-mono text-[11px] text-text-secondary sm:flex sm:px-margin-desktop"
+  >
+    {
+      siteContent.company.phones.map((phone) => (
+        <a href={`tel:${phone.number.replace(/[^\d+]/g, "")}`} class="flex items-center gap-1.5 hover:text-primary-container">
+          <Phone size={12} strokeWidth={1.5} />
+          {phone.number}
+        </a>
+      ))
+    }
+    {
+      siteContent.company.emails.map((email) => (
+        <a href={`mailto:${email}`} class="flex items-center gap-1.5 hover:text-primary-container">
+          <Mail size={12} strokeWidth={1.5} />
+          {email}
+        </a>
+      ))
+    }
+  </div>
+
+  <nav
+    class="flex w-full items-center justify-between border-b border-border-technical bg-surface/10 px-4 py-4 backdrop-blur-xl sm:px-margin-desktop"
+  >
+    <BrandLogo loading="eager" />
+
+    <div class="hidden items-center gap-8 md:flex">
+      {
+        siteContent.navigation.map((link) => {
+          const isActive = link.name === "Services" ? currentPath.startsWith("/services") : currentPath === "/" && link.href === "/";
+          return (
+            <a
+              href={link.href}
+              data-nav-link
+              data-target={targetId(link.href)}
+              class={
+                isActive
+                  ? "border-b-2 border-primary-container pb-1 font-heading text-sm font-bold text-primary"
+                  : "font-heading text-sm font-bold text-text-secondary transition-colors hover:text-primary"
+              }
+            >
+              {link.name}
+            </a>
+          );
+        })
+      }
+    </div>
+
+    <button
+      type="button"
+      data-open-quote-modal
+      class="shrink-0 whitespace-nowrap bg-primary-container px-3 py-2 font-mono text-xs font-bold tracking-wide text-background transition-transform active:scale-95 sm:px-6 sm:text-sm"
+    >
+      <span class="sm:hidden">GET QUOTE</span>
+      <span class="hidden sm:inline">{siteContent.company.ctaText}</span>
+    </button>
+  </nav>
+</div>
+
+<script>
+  const ACTIVE_CLASSES = ["border-b-2", "border-primary-container", "pb-1", "text-primary"];
+  const INACTIVE_CLASSES = ["text-text-secondary"];
+  const BASE_CLASSES = ["font-heading", "text-sm", "font-bold", "transition-colors", "hover:text-primary"];
+
+  function setup() {
+    const navLinks = Array.from(document.querySelectorAll<HTMLAnchorElement>("[data-nav-link]"));
+    const sections = navLinks
+      .map((link) => {
+        const id = link.dataset.target;
+        const el = id ? document.getElementById(id) : null;
+        return el ? { link, el } : null;
+      })
+      .filter((entry): entry is { link: HTMLAnchorElement; el: HTMLElement } => entry !== null);
+
+    if (sections.length === 0) return;
+
+    function markActive(activeLink: HTMLAnchorElement) {
+      navLinks.forEach((link) => {
+        link.classList.remove(...ACTIVE_CLASSES, ...INACTIVE_CLASSES, ...BASE_CLASSES);
+        link.classList.add(...BASE_CLASSES);
+        link.classList.add(...(link === activeLink ? ACTIVE_CLASSES : INACTIVE_CLASSES));
+      });
+    }
+
+    function updateActiveSection() {
+      let current = sections[0];
+      for (const entry of sections) {
+        const scrollMarginTop = parseFloat(getComputedStyle(entry.el).scrollMarginTop) || 0;
+        const top = entry.el.getBoundingClientRect().top;
+        if (top - scrollMarginTop <= 24) {
+          current = entry;
+        }
+      }
+      markActive(current.link);
+    }
+
+    updateActiveSection();
+    document.addEventListener("scroll", updateActiveSection, { passive: true });
+    window.addEventListener("resize", updateActiveSection);
+  }
+
+  setup();
+</script>

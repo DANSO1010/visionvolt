@@ -1,0 +1,151 @@
+---
+import { CheckCircle2, ChevronDown } from "lucide-react";
+import { ElectricProcessLine } from "../ui/ElectricProcessLine";
+import { siteContent } from "../../data/siteContent";
+
+const steps = siteContent.installationProcess;
+---
+
+<section
+  id="installation"
+  class="scroll-mt-28 bg-surface-container-lowest px-4 py-24 sm:scroll-mt-36 sm:px-margin-desktop"
+>
+  <div class="mb-16 flex flex-col">
+    <span class="mb-2 font-mono text-sm text-hud-blue-light">[INSTALLATION_WORKFLOW]</span>
+    <h2 class="text-[40px] font-bold leading-tight text-white">Our Installation Process</h2>
+  </div>
+
+  <!-- Desktop / large screens: hover a step, detail always shows in the same dock below -->
+  <div class="hidden lg:block">
+    <div class="relative grid grid-cols-6">
+      <div class="absolute left-0 top-0 h-16 w-full">
+        <ElectricProcessLine client:visible totalSteps={steps.length} glowColor="#38bdf8" color="#ffffff" />
+      </div>
+      {
+        steps.map((step, index) => (
+          <button
+            type="button"
+            data-process-trigger={index}
+            class="process-trigger relative z-10 flex flex-col items-center px-4 text-center"
+          >
+            <span
+              class={`process-trigger-box mb-6 flex h-16 w-16 items-center justify-center border bg-surface font-mono text-xl transition-colors duration-300 ${
+                index === 0
+                  ? "border-primary-container text-primary-container"
+                  : "border-border-technical text-text-secondary"
+              }`}
+            >
+              {step.step}
+            </span>
+            <h3 class="mb-2 text-white">{step.title}</h3>
+            <p class="text-[11px] text-text-secondary">{step.shortDesc}</p>
+          </button>
+        ))
+      }
+    </div>
+
+    <div id="installation-detail-panel" class="relative mt-10 grid border border-sky-500/30 bg-slate-900/95 p-8 shadow-xl shadow-sky-950/50 backdrop-blur-md">
+      {
+        steps.map((step, index) => (
+          <div
+            data-process-panel={index}
+            class={`col-start-1 row-start-1 transition-opacity duration-300 ${
+              index === 0 ? "visible opacity-100" : "invisible opacity-0"
+            }`}
+          >
+            <div class="mb-4 flex items-center justify-between gap-3">
+              <span class="font-mono text-[11px] text-hud-blue-light">[STEP_{step.step}]</span>
+              <span class="whitespace-nowrap border border-sky-500/40 px-2 py-0.5 font-mono text-[10px] text-sky-400">
+                {step.keyDeliverables.length} DELIVERABLES
+              </span>
+            </div>
+            <h4
+              aria-label={`Step ${step.step}: ${step.title}`}
+              class="font-heading mb-3 text-xl font-bold text-white"
+            >
+              {step.title}
+            </h4>
+            <div class="grid grid-cols-1 gap-6 md:grid-cols-[3fr_2fr] md:gap-10">
+              <p class="text-sm leading-relaxed text-text-secondary">{step.detailedDesc}</p>
+              <ul class="space-y-2">
+                {step.keyDeliverables.map((item) => (
+                  <li class="flex items-start gap-2 text-xs text-on-surface">
+                    <CheckCircle2 size={14} strokeWidth={2} className="mt-0.5 shrink-0 text-sky-400" />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+
+  <script>
+    const triggers = document.querySelectorAll<HTMLButtonElement>("[data-process-trigger]");
+    const panels = document.querySelectorAll<HTMLElement>("[data-process-panel]");
+
+    function showStep(activeIndex: number) {
+      panels.forEach((panel) => {
+        const isActive = Number(panel.dataset.processPanel) === activeIndex;
+        panel.classList.toggle("visible", isActive);
+        panel.classList.toggle("opacity-100", isActive);
+        panel.classList.toggle("invisible", !isActive);
+        panel.classList.toggle("opacity-0", !isActive);
+      });
+      triggers.forEach((trigger) => {
+        const box = trigger.querySelector<HTMLElement>(".process-trigger-box");
+        if (!box) return;
+        const isActive = Number(trigger.dataset.processTrigger) === activeIndex;
+        box.classList.toggle("border-primary-container", isActive);
+        box.classList.toggle("text-primary-container", isActive);
+        box.classList.toggle("border-border-technical", !isActive);
+        box.classList.toggle("text-text-secondary", !isActive);
+      });
+    }
+
+    triggers.forEach((trigger) => {
+      const index = Number(trigger.dataset.processTrigger);
+      trigger.addEventListener("mouseenter", () => showStep(index));
+      trigger.addEventListener("focus", () => showStep(index));
+    });
+  </script>
+
+  <!-- Tablet / mobile: tap-to-expand accordion -->
+  <div class="flex flex-col gap-3 lg:hidden">
+    {
+      steps.map((step) => (
+        <details class="group border border-border-technical bg-surface p-4 open:border-primary-container">
+          <summary class="flex cursor-pointer list-none items-center justify-between gap-4 [&::-webkit-details-marker]:hidden">
+            <div class="flex items-center gap-4">
+              <span class="flex h-10 w-10 shrink-0 items-center justify-center border border-border-technical font-mono text-sm text-text-secondary group-open:border-primary-container group-open:text-primary-container">
+                {step.step}
+              </span>
+              <div>
+                <h3 class="text-sm text-white">{step.title}</h3>
+                <p class="text-[11px] text-text-secondary">{step.shortDesc}</p>
+              </div>
+            </div>
+            <ChevronDown
+              size={18}
+              className="shrink-0 text-text-secondary transition-transform duration-300 group-open:rotate-180"
+            />
+          </summary>
+
+          <div class="mt-4 border-t border-border-technical pt-4">
+            <p class="mb-4 text-sm leading-relaxed text-text-secondary">{step.detailedDesc}</p>
+            <ul class="space-y-2">
+              {step.keyDeliverables.map((item) => (
+                <li class="flex items-start gap-2 text-xs text-on-surface">
+                  <CheckCircle2 size={14} strokeWidth={2} className="mt-0.5 shrink-0 text-hud-blue-light" />
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </details>
+      ))
+    }
+  </div>
+</section>

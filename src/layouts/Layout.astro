@@ -1,0 +1,51 @@
+---
+import { getImage } from "astro:assets";
+import "../styles/global.css";
+import SEO from "./SEO.astro";
+import Header from "../components/layout/Header.astro";
+import Footer from "../components/layout/Footer.astro";
+import QuoteModal from "../components/layout/QuoteModal.jsx";
+import { siteContent } from "../data/siteContent";
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+}
+
+const {
+  title = `${siteContent.company.name} | ${siteContent.company.tagline}`,
+  description = siteContent.company.valueProposition,
+  image,
+} = Astro.props;
+
+// Preload the Hero's LCP image (its <video poster>) with high priority — `fetchpriority`
+// isn't valid on <video> itself, so a preload link is the actual effective technique.
+// Only the home page renders <Hero>, so only preload it there.
+const isHome = Astro.url.pathname === "/";
+const heroPoster = isHome
+  ? await getImage({ src: siteContent.hero.backgroundImage, width: 1280, format: "webp" })
+  : null;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <SEO title={title} description={description} image={image} />
+    {heroPoster && <link rel="preload" as="image" href={heroPoster.src} fetchpriority="high" />}
+  </head>
+  <body class="technical-grid bg-background">
+    <Header />
+    <slot />
+    <Footer />
+    <QuoteModal client:idle />
+    <script>
+      document.addEventListener("click", (e) => {
+        const target = (e.target as HTMLElement).closest("[data-open-quote-modal]");
+        if (target) {
+          window.dispatchEvent(new CustomEvent("open-quote-modal"));
+        }
+      });
+    </script>
+  </body>
+</html>

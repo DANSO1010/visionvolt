@@ -1,0 +1,13 @@
+---
+import HorizontalScrollList from "../ui/HorizontalScrollList.astro";
+import { siteContent } from "../../data/siteContent";
+---
+
+<section class="border-y border-border-technical px-4 py-12 sm:px-margin-desktop">
+  <h2 class="sr-only">Areas We Serve</h2>
+  <HorizontalScrollList
+    label="AREAS WE SERVE:"
+    items={siteContent.areasWeServe.map((area) => area.toUpperCase())}
+    variant="accent"
+  />
+</section>

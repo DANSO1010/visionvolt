@@ -1,0 +1,60 @@
+---
+import { ArrowRight } from "lucide-react";
+import Layout from "../layouts/Layout.astro";
+import Hero from "../components/sections/Hero.astro";
+import ValueTicker from "../components/sections/ValueTicker.astro";
+import TrustedBrands from "../components/sections/TrustedBrands.astro";
+import Stats from "../components/sections/Stats.astro";
+import InstallationProcess from "../components/sections/InstallationProcess.astro";
+import About from "../components/sections/About.astro";
+import AboutContact from "../components/sections/AboutContact.astro";
+import Services from "../components/sections/Services.astro";
+import TrustQuote from "../components/sections/TrustQuote.astro";
+import WhyChooseUs from "../components/sections/WhyChooseUs.astro";
+import Testimonials from "../components/sections/Testimonials.astro";
+import TargetCustomers from "../components/sections/TargetCustomers.astro";
+import CoverageArea from "../components/sections/CoverageArea.astro";
+import FeaturedProjects from "../components/sections/FeaturedProjects.astro";
+import FinalCTA from "../components/sections/FinalCTA.astro";
+import ProjectGallery from "../components/sections/ProjectGallery.jsx";
+---
+
+<Layout>
+  <main class="pt-28 sm:pt-36">
+    <Hero />
+    <ValueTicker />
+    <TrustedBrands />
+    <Stats />
+    <InstallationProcess />
+    <Services />
+    <TrustQuote />
+    <WhyChooseUs />
+    <Testimonials />
+    <TargetCustomers />
+    <CoverageArea />
+
+    <section id="projects" class="scroll-mt-28 px-4 py-24 sm:scroll-mt-36 sm:px-margin-desktop">
+      <div class="mb-12 flex items-end justify-between">
+        <div>
+          <span class="font-mono text-sm text-hud-blue-light">[PROJECT_LOGS]</span>
+          <h2 class="text-[40px] font-bold leading-tight text-white">Completed Work &amp; Operations</h2>
+        </div>
+        <button
+          type="button"
+          class="hidden items-center gap-2 font-mono text-sm text-text-secondary transition-colors hover:text-primary-container sm:flex"
+        >
+          VIEW ALL CASE STUDIES
+          <ArrowRight size={18} />
+        </button>
+      </div>
+
+      <FeaturedProjects />
+      <ProjectGallery client:visible />
+    </section>
+
+    <About />
+    <AboutContact />
+
+    <FinalCTA />
+  </main>
+</Layout>

@@ -1,0 +1,179 @@
+@import "tailwindcss";
+
+/* Self-hosted fonts (@fontsource) — replaces the Google Fonts CDN request. */
+@import "@fontsource/montserrat/700.css";
+@import "@fontsource/montserrat/800.css";
+@import "@fontsource/open-sans/400.css";
+@import "@fontsource/open-sans/600.css";
+@import "@fontsource/open-sans/700.css";
+@import "@fontsource/jetbrains-mono/400.css";
+@import "@fontsource/jetbrains-mono/500.css";
+@import "@fontsource/jetbrains-mono/700.css";
+
+/* Obsidian Sentinel design system — see DESIGN.md */
+@theme {
+  --color-background: #0d0f12;
+  --color-surface: #0d0f12;
+  --color-surface-dim: #111317;
+  --color-surface-bright: #37393d;
+  --color-surface-slate: #2a2f35;
+  --color-surface-container-lowest: #0c0e11;
+  --color-surface-container-low: #1a1c1f;
+  --color-surface-container: #1e2023;
+  --color-surface-container-high: #282a2d;
+  --color-surface-container-highest: #333538;
+
+  --color-text-primary: #ffffff;
+  --color-text-secondary: #a0aab7;
+  --color-on-surface: #e2e2e6;
+  --color-on-surface-variant: #d0c6ab;
+
+  --color-border-technical: #3a414a;
+  --color-outline: #999077;
+
+  --color-primary: #fff6df;
+  --color-primary-container: #ffd700;
+  --color-on-primary-container: #705e00;
+
+  --color-hud-blue: #0056a0;
+  /* Lighter variant of hud-blue for text on dark backgrounds — #0056a0 as text
+     fails WCAG AA (2.61:1); this passes (5.16:1+) against every surface token above. */
+  --color-hud-blue-light: #3da5ff;
+  --color-secondary: #a6c8ff;
+  --color-secondary-container: #00559f;
+
+  --font-sans: "Open Sans", sans-serif;
+  --font-heading: "Montserrat", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+
+  --spacing-margin-desktop: 64px;
+  --spacing-margin-mobile: 16px;
+  --spacing-gutter: 24px;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-background);
+  color: var(--color-text-primary);
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-primary-container);
+  outline-offset: 2px;
+}
+
+@layer base {
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-heading);
+    font-weight: 700;
+  }
+}
+
+/* Subtle 1px line grid — reinforces the "Brutalist" structure */
+.technical-grid {
+  background-size: 40px 40px;
+  background-image:
+    linear-gradient(to right, rgba(58, 65, 74, 0.1) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(58, 65, 74, 0.1) 1px, transparent 1px);
+}
+
+/* Viewfinder-style corner brackets for HUD overlays */
+.hud-bracket::before,
+.hud-bracket::after {
+  content: "";
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-color: var(--color-hud-blue);
+  border-style: solid;
+}
+.hud-bracket-tl::before {
+  top: 0;
+  left: 0;
+  border-width: 1.5px 0 0 1.5px;
+}
+.hud-bracket-tr::before {
+  top: 0;
+  right: 0;
+  border-width: 1.5px 1.5px 0 0;
+}
+.hud-bracket-bl::after {
+  bottom: 0;
+  left: 0;
+  border-width: 0 0 1.5px 1.5px;
+}
+.hud-bracket-br::after {
+  bottom: 0;
+  right: 0;
+  border-width: 0 1.5px 1.5px 0;
+}
+
+.ticker-wrap {
+  overflow: hidden;
+  white-space: nowrap;
+}
+.ticker {
+  animation: ticker var(--ticker-duration, 30s) linear infinite;
+}
+@keyframes ticker {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.bento-card {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.bento-card:hover {
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.15);
+  border-color: var(--color-primary-container);
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Project gallery flip cards */
+.flip-card-scene {
+  perspective: 1200px;
+}
+.flip-card-inner {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.flip-card-face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+.flip-card-back {
+  transform: rotateY(180deg);
+}
+
+/* Only flip on hover-capable pointers (mouse/trackpad). Touch devices fire a
+   "sticky" :hover on tap that never clears, so we scope this to real hover
+   support and let touch users tap straight through to the lightbox instead. */
+@media (hover: hover) and (pointer: fine) {
+  .flip-card-scene:hover .flip-card-inner {
+    transform: rotateY(180deg);
+  }
+}

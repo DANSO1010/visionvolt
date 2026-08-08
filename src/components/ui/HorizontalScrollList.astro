@@ -1,0 +1,119 @@
+---
+import { ChevronLeft, ChevronRight } from "lucide-react";
+
+interface Props {
+  label: string;
+  items: string[];
+  variant?: "accent" | "muted";
+}
+
+const { label, items, variant = "accent" } = Astro.props;
+const regionLabel = label.replace(/:$/, "");
+
+const pillClass =
+  variant === "accent"
+    ? "border-primary-container text-primary"
+    : "border-border-technical text-text-secondary tracking-wide";
+---
+
+<div class="hz-scroller flex items-center gap-6">
+  <span class="whitespace-nowrap text-sm text-text-secondary">{label}</span>
+
+  <div class="relative min-w-0 flex-1">
+    <div
+      class="hz-fade-left pointer-events-none absolute inset-y-0 left-0 z-10 w-10 bg-linear-to-r from-background to-transparent opacity-0 transition-opacity duration-200"
+    >
+    </div>
+    <div
+      class="hz-fade-right pointer-events-none absolute inset-y-0 right-0 z-10 w-10 bg-linear-to-l from-background to-transparent opacity-0 transition-opacity duration-200"
+    >
+    </div>
+
+    <div
+      class="hz-track no-scrollbar flex gap-4 overflow-x-auto pb-1"
+      tabindex="0"
+      role="region"
+      aria-label={regionLabel}
+    >
+      {
+        items.map((item) => (
+          <span class={`whitespace-nowrap border ${pillClass} bg-surface-slate px-6 py-2 text-sm`}>
+            {item}
+          </span>
+        ))
+      }
+    </div>
+  </div>
+
+  <div class="hidden shrink-0 gap-2 sm:flex">
+    <button
+      type="button"
+      class="hz-prev border border-border-technical p-2 text-text-secondary transition-colors hover:border-primary-container hover:text-primary-container disabled:pointer-events-none disabled:opacity-30"
+      aria-label="Scroll left"
+    >
+      <ChevronLeft size={16} strokeWidth={2} />
+    </button>
+    <button
+      type="button"
+      class="hz-next border border-border-technical p-2 text-text-secondary transition-colors hover:border-primary-container hover:text-primary-container disabled:pointer-events-none disabled:opacity-30"
+      aria-label="Scroll right"
+    >
+      <ChevronRight size={16} strokeWidth={2} />
+    </button>
+  </div>
+</div>
+
+<script>
+  function setupScroller(root: HTMLElement) {
+    const track = root.querySelector<HTMLElement>(".hz-track");
+    const prevBtn = root.querySelector<HTMLButtonElement>(".hz-prev");
+    const nextBtn = root.querySelector<HTMLButtonElement>(".hz-next");
+    const fadeLeft = root.querySelector<HTMLElement>(".hz-fade-left");
+    const fadeRight = root.querySelector<HTMLElement>(".hz-fade-right");
+    if (!track) return;
+
+    function updateEdges() {
+      const maxScroll = track!.scrollWidth - track!.clientWidth;
+      const atStart = track!.scrollLeft <= 1;
+      const atEnd = track!.scrollLeft >= maxScroll - 1;
+
+      fadeLeft?.classList.toggle("opacity-100", !atStart);
+      fadeRight?.classList.toggle("opacity-100", !atEnd);
+      if (prevBtn) prevBtn.disabled = atStart;
+      if (nextBtn) nextBtn.disabled = atEnd;
+    }
+
+    // Plain mice only report vertical wheel delta; redirect that to horizontal
+    // scroll here so the list is scrollable without a trackpad. Trackpad
+    // gestures already arrive as horizontal delta and pass through untouched.
+    track.addEventListener(
+      "wheel",
+      (event) => {
+        if (Math.abs(event.deltaY) > Math.abs(event.deltaX)) {
+          track!.scrollBy({ left: event.deltaY, behavior: "auto" });
+          event.preventDefault();
+        }
+      },
+      { passive: false },
+    );
+
+    prevBtn?.addEventListener("click", () => track!.scrollBy({ left: -240, behavior: "smooth" }));
+    nextBtn?.addEventListener("click", () => track!.scrollBy({ left: 240, behavior: "smooth" }));
+
+    track.addEventListener("keydown", (event) => {
+      if (event.key === "ArrowRight") {
+        track!.scrollBy({ left: 240, behavior: "smooth" });
+        event.preventDefault();
+      } else if (event.key === "ArrowLeft") {
+        track!.scrollBy({ left: -240, behavior: "smooth" });
+        event.preventDefault();
+      }
+    });
+
+    track.addEventListener("scroll", updateEdges, { passive: true });
+    window.addEventListener("resize", updateEdges);
+    updateEdges();
+  }
+
+  document.querySelectorAll<HTMLElement>(".hz-scroller").forEach(setupScroller);
+</script>

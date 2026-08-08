@@ -1,0 +1,13 @@
+---
+import HorizontalScrollList from "../ui/HorizontalScrollList.astro";
+import { siteContent } from "../../data/siteContent";
+---
+
+<section class="border-y border-border-technical px-4 py-12 sm:px-margin-desktop">
+  <h2 class="sr-only">Trusted Technologies</h2>
+  <HorizontalScrollList
+    label="TRUSTED TECHNOLOGIES:"
+    items={siteContent.trustedBrands.map((brand) => brand.toUpperCase())}
+    variant="muted"
+  />
+</section>

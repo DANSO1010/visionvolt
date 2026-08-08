@@ -1,0 +1,13 @@
+---
+import HorizontalScrollList from "../ui/HorizontalScrollList.astro";
+import { siteContent } from "../../data/siteContent";
+---
+
+<section id="industries" class="border-y border-border-technical px-4 py-12 sm:px-margin-desktop">
+  <h2 class="sr-only">Sectors We Serve</h2>
+  <HorizontalScrollList
+    label="SECTORS WE SERVE:"
+    items={siteContent.targetCustomers.map((customer) => customer.name.toUpperCase())}
+    variant="accent"
+  />
+</section>

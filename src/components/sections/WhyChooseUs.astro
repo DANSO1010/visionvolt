@@ -1,0 +1,25 @@
+---
+import { siteContent } from "../../data/siteContent";
+import { getIcon } from "../../utils/icons";
+---
+
+<section id="why-us" class="bg-surface-dim px-4 py-24 sm:px-margin-desktop">
+  <div class="mb-16 flex flex-col">
+    <span class="mb-2 font-mono text-sm text-hud-blue-light">[CLIENT_ADVANTAGES]</span>
+    <h2 class="text-[40px] font-bold leading-tight text-white">Why Companies Choose VisionVolt</h2>
+  </div>
+
+  <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+    {
+      siteContent.whyChooseUsReasons.map((reason) => {
+        const Icon = getIcon(reason.icon);
+        return (
+          <div class="flex items-center gap-4 border border-border-technical bg-surface-slate/30 p-6 transition-colors hover:border-primary-container">
+            <Icon aria-hidden="true" size={26} strokeWidth={1.5} className="shrink-0 text-primary-container" />
+            <p class="text-sm text-white">{reason.title}</p>
+          </div>
+        );
+      })
+    }
+  </div>
+</section>

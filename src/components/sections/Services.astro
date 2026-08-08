@@ -1,0 +1,80 @@
+---
+import { Image } from "astro:assets";
+import { siteContent } from "../../data/siteContent";
+import { getIcon } from "../../utils/icons";
+
+const [featured, ...rest] = siteContent.services;
+const FeaturedIcon = getIcon(featured.iconName);
+---
+
+<section id="services" class="scroll-mt-28 px-4 py-24 sm:scroll-mt-36 sm:px-margin-desktop">
+  <div class="mb-12 flex flex-col">
+    <span class="mb-2 font-mono text-sm text-hud-blue-light">[SEC_CATALOG_2024]</span>
+    <h2 class="text-[40px] font-bold leading-tight text-white">Professional Services Ecosystem</h2>
+  </div>
+
+  <div class="grid auto-rows-70 grid-cols-1 gap-6 md:grid-cols-12">
+    <div
+      class="bento-card relative flex flex-col justify-between overflow-hidden border border-border-technical bg-surface-slate p-8 md:col-span-8 md:row-span-2"
+    >
+      <Image
+        src={featured.image}
+        alt={featured.title}
+        loading="lazy"
+        decoding="async"
+        class="absolute inset-0 h-full w-full object-cover opacity-20"
+      />
+      <div class="relative z-10">
+        <span class="font-mono text-[11px] text-hud-blue-light">[{featured.code}]</span>
+        <h3 class="mt-2 text-[40px] font-bold leading-tight text-white">{featured.title}</h3>
+        <p class="mt-4 max-w-md text-base text-text-secondary">{featured.description}</p>
+      </div>
+      <div class="relative z-10 flex gap-4">
+        <FeaturedIcon size={36} strokeWidth={1.5} className="text-hud-blue-light" />
+      </div>
+    </div>
+
+    {
+      rest.map((service) => {
+        const Icon = getIcon(service.iconName);
+        return (
+          <div class="bento-card flex flex-col justify-between border border-border-technical bg-surface-slate p-6 md:col-span-4">
+            <div>
+              <span class="font-mono text-[11px] text-hud-blue-light">[{service.code}]</span>
+              <h3 class="mt-1 text-2xl font-semibold text-white">{service.title}</h3>
+              <p class="mt-2 text-[11px] text-text-secondary">{service.description}</p>
+            </div>
+            <div class="flex items-end justify-between">
+              <Icon size={28} strokeWidth={1.5} className="text-hud-blue-light" />
+              <span class="font-mono text-[11px] text-text-secondary">{service.tag}</span>
+            </div>
+          </div>
+        );
+      })
+    }
+  </div>
+
+  <div class="mb-12 mt-20 flex flex-col">
+    <span class="mb-2 font-mono text-sm text-hud-blue-light">[SERVICE_CATALOG]</span>
+    <h3 class="text-2xl font-bold leading-tight text-white">Explore Services In Depth</h3>
+  </div>
+
+  <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+    {
+      siteContent.detailedServices.map((service) => {
+        const Icon = getIcon(service.icon);
+        return (
+          <a
+            href={`/services/${service.slug}`}
+            class="bento-card flex flex-col gap-4 border border-border-technical bg-surface-slate p-6 transition-colors hover:border-primary-container"
+          >
+            <Icon size={32} strokeWidth={1.5} className="text-hud-blue-light" />
+            <h4 class="text-xl font-semibold text-white">{service.title}</h4>
+            <p class="text-text-secondary">{service.shortDesc}</p>
+            <span class="mt-auto font-mono text-[11px] text-primary-container">VIEW DETAILS →</span>
+          </a>
+        );
+      })
+    }
+  </div>
+</section>
