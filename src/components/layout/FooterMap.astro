@@ -2,12 +2,12 @@
 import { MapPin } from "lucide-react";
 import { siteContent } from "../../data/siteContent";
 
-const { lat, lng } = siteContent.company.location;
-const coords = `${lat},${lng}`;
-// No-API-key Google Maps embed — swap the query for the real coordinates once available.
-const embedSrc = `https://maps.google.com/maps?q=${encodeURIComponent(coords)}&z=14&output=embed`;
+const [origin, destination] = siteContent.company.locations;
+// No-API-key Google Maps embed showing both locations: the "directions" query renders
+// a marker for each address (connected by a route line) without needing a Maps API key.
+const embedSrc = `https://maps.google.com/maps?saddr=${encodeURIComponent(origin)}&daddr=${encodeURIComponent(destination)}&output=embed`;
 // Universal Google Maps link: opens the native app on mobile if installed, otherwise the mobile/desktop web map.
-const mapsUrl = `https://www.google.com/maps?q=${encodeURIComponent(coords)}`;
+const mapsUrl = `https://www.google.com/maps/dir/${encodeURIComponent(origin)}/${encodeURIComponent(destination)}`;
 ---
 
 <div

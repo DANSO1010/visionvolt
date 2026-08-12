@@ -130,12 +130,10 @@ export const siteContent = {
     ctaText: "GET A FREE ESTIMATE",
     ctaSubtext:
       "Receive a customized installation proposal based on your property, security goals, and project requirements.",
-    // TODO: placeholder coordinates (downtown Chicago, IL) — replace with the real business
-    // location once available so the footer mini-map and its links point to the exact address.
-    location: {
-      lat: 41.8781,
-      lng: -87.6298,
-    },
+    locations: [
+      "9954 S 84th Terrace, Palos Hills, IL 60465, United States",
+      "6308 N Francisco Ave, Chicago, IL 60659",
+    ],
   },
 
   navigation: [
@@ -523,6 +521,7 @@ export const siteContent = {
       label: "Indoor & Outdoor Electrical Installation",
       description:
         "Our technical team works with precision and safety on the installation and adaptation of indoor and outdoor electrical systems, using high-quality materials and following industry best practices.",
+      imagePosition: "object-[center_20%]",
     },
   ],
 

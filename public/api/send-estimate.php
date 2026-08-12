@@ -27,6 +27,19 @@ if (!is_array($input)) {
     exit;
 }
 
+// Anti-spam: honeypot field (real users never fill this) and a minimum
+// fill-time check (bots typically submit within milliseconds of loading
+// the page). Both failures respond as if the request succeeded, so
+// automated submitters don't learn they were caught.
+$honeypot = is_string($input['website'] ?? null) ? trim($input['website']) : '';
+$formLoadedAt = is_numeric($input['formLoadedAt'] ?? null) ? (float) $input['formLoadedAt'] : null;
+$elapsedMs = $formLoadedAt !== null ? (microtime(true) * 1000) - $formLoadedAt : null;
+
+if ($honeypot !== '' || ($elapsedMs !== null && $elapsedMs < 3000)) {
+    echo json_encode(['ok' => true]);
+    exit;
+}
+
 function clean_field($value) {
     $value = is_string($value) ? trim($value) : '';
     return preg_replace('/[\r\n]+/', ' ', $value);
@@ -68,14 +81,21 @@ function row($label, $value) {
         . '</tr>';
 }
 
-$htmlBody = '<div style="background:#0d0f12;padding:32px 24px;text-align:center;">'
-    . '<span style="font-family:Arial,sans-serif;font-size:22px;font-weight:bold;color:#ffffff;">Vision<span style="color:#ffd700;">Volt</span></span>'
-    . '</div>'
-    . '<div style="max-width:600px;margin:0 auto;background:#1e2023;font-family:Arial,sans-serif;">'
-    . '<div style="padding:28px 24px;">'
+$logoUrl = 'https://www.vision-volt.com/apple-touch-icon.png';
+
+$htmlBody = '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#0d0f12;">'
+    . '<tr><td align="center" style="padding:0;">'
+    . '<table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" style="width:100%;max-width:600px;">'
+
+    . '<tr><td style="background:#0d0f12;padding:32px 24px;text-align:center;">'
+    . '<img src="' . e($logoUrl) . '" width="32" height="32" alt="VisionVolt" style="vertical-align:middle;margin-right:10px;border:0;display:inline-block;" />'
+    . '<span style="font-family:Arial,sans-serif;font-size:22px;font-weight:bold;color:#ffffff;vertical-align:middle;">Vision<span style="color:#ffd700;">Volt</span></span>'
+    . '</td></tr>'
+
+    . '<tr><td style="background:#1e2023;padding:28px 24px;font-family:Arial,sans-serif;">'
     . '<span style="display:inline-block;background:#0056a0;color:#ffffff;font-size:11px;letter-spacing:1px;font-weight:bold;padding:5px 10px;border-radius:2px;">NEW ESTIMATE REQUEST</span>'
     . '<h2 style="margin:16px 0 20px;color:#ffffff;font-size:20px;">' . e($fullName) . ' wants a quote</h2>'
-    . '<table style="width:100%;border-collapse:collapse;">'
+    . '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="width:100%;border-collapse:collapse;">'
     . row('Full Name', $fullName)
     . row('Business Name', $businessName !== '' ? $businessName : '—')
     . row('Phone', $phone)
@@ -87,15 +107,20 @@ $htmlBody = '<div style="background:#0d0f12;padding:32px 24px;text-align:center;
     . '<p style="margin:0 0 6px;color:#8a9099;font-size:11px;letter-spacing:1px;text-transform:uppercase;">Message</p>'
     . '<p style="margin:0;color:#ffffff;font-size:14px;white-space:pre-wrap;">' . e($message !== '' ? $message : '—') . '</p>'
     . '</div>'
-    . '</div>'
-    . '<div style="padding:16px 24px;background:#0c0e11;font-size:12px;color:#8a9099;">'
+    . '</td></tr>'
+
+    . '<tr><td style="background:#0c0e11;padding:16px 24px;font-family:Arial,sans-serif;font-size:12px;color:#8a9099;">'
     . 'Sent from the "Get a Free Estimate" form at vision-volt.com'
-    . '</div>'
-    . '</div>';
+    . '</td></tr>'
+
+    . '</table>'
+    . '</td></tr>'
+    . '</table>';
 
 $mail = new PHPMailer(true);
 
 try {
+    $mail->CharSet = 'UTF-8';
     $mail->isSMTP();
     $mail->Host = $config['smtp_host'];
     $mail->SMTPAuth = true;

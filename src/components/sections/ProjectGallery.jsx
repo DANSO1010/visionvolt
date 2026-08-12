@@ -54,7 +54,7 @@ export default function ProjectGallery() {
                   alt={project.alt}
                   loading="lazy"
                   decoding="async"
-                  className="h-full w-full object-cover"
+                  className={`h-full w-full object-cover ${project.imagePosition ?? ""}`}
                 />
                 <div className="absolute right-2 top-2 bg-hud-blue px-1 font-mono text-[9px] text-white">
                   {`DONE_${String(index + 1).padStart(2, "0")}`}
@@ -106,7 +106,7 @@ export default function ProjectGallery() {
               alt={projects[activeIndex].alt}
               loading="eager"
               decoding="async"
-              className="max-h-[45vh] w-full object-cover md:max-h-[85vh] md:w-3/5"
+              className={`max-h-[45vh] w-full object-cover md:max-h-[85vh] md:w-3/5 ${projects[activeIndex].imagePosition ?? ""}`}
             />
             <div className="flex flex-col gap-3 overflow-y-auto p-6 md:w-2/5">
               <span className="font-mono text-[11px] text-hud-blue-light">

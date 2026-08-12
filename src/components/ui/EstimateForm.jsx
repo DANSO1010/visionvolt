@@ -11,6 +11,7 @@ const initialForm = {
   projectType: projectTypes[0],
   cameraCount: cameraCounts[0],
   message: "",
+  website: "",
 };
 
 const fieldClass =
@@ -22,6 +23,7 @@ export default function EstimateForm({ idPrefix = "estimate", heading, descripti
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
+  const [formLoadedAt] = useState(() => Date.now());
 
   function handleChange(e) {
     const { name, value } = e.target;
@@ -36,7 +38,7 @@ export default function EstimateForm({ idPrefix = "estimate", heading, descripti
       const res = await fetch("/api/send-estimate.php", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify({ ...form, formLoadedAt }),
       });
       if (!res.ok) throw new Error("Request failed");
       setSubmitted(true);
@@ -62,6 +64,19 @@ export default function EstimateForm({ idPrefix = "estimate", heading, descripti
       {description && <p className="mt-2 text-sm text-text-secondary">{description}</p>}
 
       <form onSubmit={handleSubmit} className="mt-6 space-y-5">
+        <div className="absolute left-[-9999px] top-auto h-px w-px overflow-hidden" aria-hidden="true">
+          <label htmlFor={`${idPrefix}-website`}>Leave this field empty</label>
+          <input
+            id={`${idPrefix}-website`}
+            name="website"
+            type="text"
+            tabIndex={-1}
+            autoComplete="off"
+            value={form.website}
+            onChange={handleChange}
+          />
+        </div>
+
         <div>
           <label className={labelClass} htmlFor={`${idPrefix}-fullName`}>
             Full Name
