@@ -19,6 +19,8 @@ import project9Img from "../assets/projects/project-9.jpeg";
 import project10Img from "../assets/projects/project-10.jpeg";
 import project11Img from "../assets/projects/project-11.jpeg";
 import project12Img from "../assets/projects/project-12.jpeg";
+import project13Img from "../assets/projects/project-13.jpeg";
+import project14Img from "../assets/projects/project-14.jpeg";
 import heroBgImage from "../assets/hero-bg.jpeg";
 
 export interface Service {
@@ -84,6 +86,8 @@ export interface FeaturedProject {
   description: string;
   highlights: string[];
   images: ImageMetadata[];
+  /** Tailwind object-position class per image index, for images whose subject isn't centered. */
+  imagePositions?: Record<number, string>;
 }
 
 export interface DetailedService {
@@ -410,7 +414,7 @@ export const siteContent = {
       description:
         "We are proud to share the success of one of our most ambitious projects. For this initiative, we linked three buildings into a single, integrated security system, deploying over 32 high-definition cameras. By using specialized antennas, we established a robust, reliable connection between the structures, ensuring complete coverage and real-time access. Additionally, we handled the entire outdoor electrical installation—including the parking areas—to guarantee proper lighting and secure connections.",
       highlights: ["3 Linked Buildings", "32+ HD Cameras", "Wireless Antennas", "Outdoor & Parking Electrical"],
-      images: [project1Img, project4Img, project6Img],
+      images: [project1Img, project14Img, project6Img],
     },
     {
       id: "gym-installation",
@@ -419,7 +423,8 @@ export const siteContent = {
       description:
         "We undertook a project for a gym that required the installation of approximately 18 security cameras. Given the size of the facility, we carried out an extensive and complex cabling installation to ensure full coverage of every area. We installed high-definition cameras—including 180-degree models—all monitored by the owner, who can view the footage in real-time via their mobile phone.",
       highlights: ["18 HD & 180° Cameras", "Complex Cabling Infrastructure", "Mobile Real-Time Access"],
-      images: [project2Img, project9Img, project11Img],
+      images: [project2Img, project9Img, project13Img],
+      imagePositions: { 0: "object-[center_28%]" },
     },
   ] as FeaturedProject[],
 

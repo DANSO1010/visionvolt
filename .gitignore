@@ -17,6 +17,9 @@ pnpm-debug.log*
 .env
 .env.production
 
+# SMTP credentials — filled in locally, never committed
+public/api/config.php
+
 # local MCP server config (contains API keys)
 .mcp.json
 

@@ -14,7 +14,7 @@ import { siteContent } from "../../data/siteContent";
               alt={`${project.title}, view ${i + 1}`}
               loading="lazy"
               decoding="async"
-              class={`h-40 w-full border border-border-technical object-cover md:h-48 ${i === 0 ? "col-span-2" : ""}`}
+              class={`h-40 w-full border border-border-technical object-cover md:h-48 ${i === 0 ? "col-span-2" : ""} ${project.imagePositions?.[i] ?? ""}`}
             />
           ))}
         </div>
