@@ -18,6 +18,16 @@ const fieldClass =
   "w-full border-0 border-b border-border-technical bg-transparent px-0 py-2 text-sm text-white placeholder-text-secondary/60 focus:border-primary-container focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-container focus-visible:ring-offset-2 focus-visible:ring-offset-surface-slate";
 const labelClass = "mb-1 block text-[11px] uppercase tracking-wide text-text-secondary";
 
+// Letters (incl. accented), spaces, hyphens and apostrophes — covers real names without allowing digits/symbols.
+const NAME_ALLOWED = /[^A-Za-zÀ-ÖØ-öø-ÿ' -]/g;
+// Digits plus common phone formatting characters while typing; the actual digit-count check happens on submit.
+const PHONE_ALLOWED = /[^\d()+\-.\s]/g;
+
+function isValidUsPhone(value) {
+  const digits = value.replace(/\D/g, "");
+  return digits.length === 10 || (digits.length === 11 && digits.startsWith("1"));
+}
+
 export default function EstimateForm({ idPrefix = "estimate", heading, description, submitLabel = "SEND REQUEST" }) {
   const [form, setForm] = useState(initialForm);
   const [submitted, setSubmitted] = useState(false);
@@ -27,13 +37,21 @@ export default function EstimateForm({ idPrefix = "estimate", heading, descripti
 
   function handleChange(e) {
     const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
+    const cleaned =
+      name === "fullName" ? value.replace(NAME_ALLOWED, "") : name === "phone" ? value.replace(PHONE_ALLOWED, "") : value;
+    setForm((prev) => ({ ...prev, [name]: cleaned }));
   }
 
   async function handleSubmit(e) {
     e.preventDefault();
-    setSubmitting(true);
     setError("");
+
+    if (!isValidUsPhone(form.phone)) {
+      setError("Please enter a valid US phone number (10 digits).");
+      return;
+    }
+
+    setSubmitting(true);
     try {
       const res = await fetch("/api/send-estimate.php", {
         method: "POST",

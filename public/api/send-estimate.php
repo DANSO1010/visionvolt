@@ -53,7 +53,17 @@ $projectType = clean_field($input['projectType'] ?? '');
 $cameraCount = clean_field($input['cameraCount'] ?? '');
 $message = is_string($input['message'] ?? null) ? trim($input['message']) : '';
 
-if ($fullName === '' || $phone === '' || $email === '' || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+$phoneDigits = preg_replace('/\D+/', '', $phone);
+$isValidUsPhone = strlen($phoneDigits) === 10 || (strlen($phoneDigits) === 11 && $phoneDigits[0] === '1');
+
+if (
+    $fullName === ''
+    || !preg_match("/^[\p{L} '\-]+$/u", $fullName)
+    || $phone === ''
+    || !$isValidUsPhone
+    || $email === ''
+    || !filter_var($email, FILTER_VALIDATE_EMAIL)
+) {
     http_response_code(400);
     echo json_encode(['ok' => false, 'error' => 'Missing or invalid required fields']);
     exit;
