@@ -20,15 +20,31 @@ const labelClass = "mb-1 block text-[11px] uppercase tracking-wide text-text-sec
 export default function EstimateForm({ idPrefix = "estimate", heading, description, submitLabel = "SEND REQUEST" }) {
   const [form, setForm] = useState(initialForm);
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState("");
 
   function handleChange(e) {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
   }
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
-    setSubmitted(true);
+    setSubmitting(true);
+    setError("");
+    try {
+      const res = await fetch("/api/send-estimate.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+      if (!res.ok) throw new Error("Request failed");
+      setSubmitted(true);
+    } catch {
+      setError("Something went wrong sending your request. Please try again or call us directly.");
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   if (submitted) {
@@ -162,11 +178,14 @@ export default function EstimateForm({ idPrefix = "estimate", heading, descripti
           />
         </div>
 
+        {error && <p className="text-sm text-red-400">{error}</p>}
+
         <button
           type="submit"
-          className="w-full bg-primary-container px-5 py-3 font-mono text-sm font-bold text-background transition-all hover:scale-[1.02]"
+          disabled={submitting}
+          className="w-full bg-primary-container px-5 py-3 font-mono text-sm font-bold text-background transition-all hover:scale-[1.02] disabled:cursor-not-allowed disabled:opacity-60"
         >
-          {submitLabel}
+          {submitting ? "SENDING..." : submitLabel}
         </button>
       </form>
     </>
