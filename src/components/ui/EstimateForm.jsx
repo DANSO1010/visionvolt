@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 const projectTypes = ["Commercial", "Residential", "Industrial", "Multi-Family", "Government"];
-const cameraCounts = ["1-5", "6-15", "16-32", "32+"];
+const cameraCounts = ["1-5", "6-15", "16-32", "33-75", "76-150", "151-350", "351-650", "650+"];
 
 const initialForm = {
   fullName: "",
