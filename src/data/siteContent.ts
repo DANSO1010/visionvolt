@@ -163,7 +163,7 @@ export const siteContent = {
   trustedBrands: ["Uniview", "Hikvision", "Ubiquiti", "Verkada", "Honeywell", "Axis"],
 
   stats: [
-    { label: "Cameras Installed", value: "100+" },
+    { label: "Cameras Installed", value: "650+" },
     { label: "Commercial Projects", value: "25+" },
     { label: "Installation Warranty", value: "2-Year" },
     { label: "License & Insurance", value: "100% Covered" },

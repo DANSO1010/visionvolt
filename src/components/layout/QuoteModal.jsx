@@ -32,12 +32,15 @@ export default function QuoteModal() {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4" onClick={close}>
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black/70 p-4"
+      onClick={close}
+    >
       <div
         role="dialog"
         aria-modal="true"
         aria-label={siteContent.company.ctaText}
-        className="relative w-full max-w-lg border border-border-technical bg-surface-container p-6 shadow-2xl"
+        className="relative my-8 max-h-[85vh] w-full max-w-lg overflow-y-auto border border-border-technical bg-surface-container p-6 shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
         <button

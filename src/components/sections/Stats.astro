@@ -6,8 +6,10 @@ import { siteContent } from "../../data/siteContent";
   <h2 class="sr-only">Company Statistics</h2>
   <div class="grid grid-cols-2 gap-px overflow-hidden border border-border-technical bg-border-technical md:grid-cols-5">
     {
-      siteContent.stats.map((stat) => (
-        <div class="flex flex-col items-center gap-2 bg-surface-container-lowest px-4 py-8 text-center">
+      siteContent.stats.map((stat, index) => (
+        <div
+          class={`flex flex-col items-center gap-2 bg-surface-container-lowest px-4 py-8 text-center ${index === siteContent.stats.length - 1 ? "col-span-2 md:col-span-1" : ""}`}
+        >
           <span class="text-3xl font-bold text-primary-container">{stat.value}</span>
           <span class="text-[11px] uppercase tracking-wide text-text-secondary">{stat.label}</span>
         </div>
