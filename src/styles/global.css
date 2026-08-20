@@ -148,6 +148,24 @@ body {
   scrollbar-width: none;
 }
 
+.themed-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border-technical) transparent;
+}
+.themed-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+.themed-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.themed-scrollbar::-webkit-scrollbar-thumb {
+  background-color: var(--color-border-technical);
+  border-radius: 9999px;
+}
+.themed-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: var(--color-primary-container);
+}
+
 /* Project gallery flip cards */
 .flip-card-scene {
   perspective: 1200px;

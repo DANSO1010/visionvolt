@@ -40,7 +40,7 @@ export default function QuoteModal() {
         role="dialog"
         aria-modal="true"
         aria-label={siteContent.company.ctaText}
-        className="relative my-8 max-h-[85vh] w-full max-w-lg overflow-y-auto border border-border-technical bg-surface-container p-6 shadow-2xl"
+        className="themed-scrollbar relative my-8 max-h-[85vh] w-full max-w-lg overflow-y-auto border border-border-technical bg-surface-container p-6 shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
         <button
